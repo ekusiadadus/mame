@@ -492,6 +492,9 @@ void device_execute_interface::interface_clock_changed()
 	m_cycles_per_second = clocks_to_cycles(device().clock());
 	m_attoseconds_per_cycle = HZ_TO_ATTOSECONDS(m_cycles_per_second);
 
+	// resynchronize the localtime to the clock domain
+	m_localtime = attotime::from_ticks(m_localtime.as_ticks(device().clock())+1, device().clock());
+
 	// update the device's divisor
 	s64 attos = m_attoseconds_per_cycle;
 	m_divshift = 0;
